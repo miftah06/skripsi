@@ -8,7 +8,7 @@ def validate_length(judul, skripsi):
 
     # Menerima input untuk setiap opsional
     opsional = []
-    for i in range(15):  # Sesuaikan dengan jumlah opsional
+    for i in range(3):  # Sesuaikan dengan jumlah opsional
         prompt = f"Opsional berupa isi keterangan misal: ex: \n Berupa isi Rumusan Masalah \n1. Apa yang dixxx...? 1 \n atau materi dst.. {i + 1}: "
         input_opsional = input(prompt).strip()
         opsional.append(input_opsional)
@@ -18,7 +18,7 @@ def validate_length(judul, skripsi):
 def validate_subjudul(judul, i):
     while not judul:
         print(f"Subjudul {i} tidak boleh kosong.")
-        judul = input(f"Masukkan Subjudul {i}: ").strip()
+        judul = input(f"Masukkan Subjudul {i} misal' A. Latar Belakang : ").strip()
     return judul
 
 def split_title_into_sections(judul):

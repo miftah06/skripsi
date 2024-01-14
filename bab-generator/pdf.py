@@ -28,9 +28,10 @@ def generate_html(data, katakunci_list):
     <head>
         <title>{handle_nan(data['Logo'][0], "Default Logo")}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <style>
+               <style>
             body {{
                 margin: 4%;
+                font-family: 'Times New Roman', Times, serif;
             }}
             .container {{
                 margin: auto;
@@ -49,6 +50,16 @@ def generate_html(data, katakunci_list):
             }}
             .left {{
                 text-align: left;
+                margin-bottom: 2em;
+            }}
+            .center {{
+                text-align: center;
+            }}
+            .ul-spacing {{
+                margin-left: 1em;
+            }}
+            .first-line-indent {{
+                text-indent: 3em;
             }}
         </style>
     </head>
@@ -78,14 +89,14 @@ def generate_html(data, katakunci_list):
     return template
 
 def generate_pdf_from_html(html_content, output_pdf):
-    with open('materi.html', 'w', encoding='utf-8') as html_file:
+    with open('pdf.html', 'w', encoding='utf-8') as html_file:
         html_file.write(html_content)
 
     # Convert HTML to PDF using pdfkit
-    pdfkit.from_file('materi.html', output_pdf)
+    pdfkit.from_file('pdf.html', output_pdf)
 
     # Remove temporary HTML file
-    os.remove('materi.html')
+    os.remove('pdf.html')
 
     print(f"Dokumen PDF berhasil disimpan di {output_pdf}")
 
