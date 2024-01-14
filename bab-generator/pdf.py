@@ -1,12 +1,27 @@
 import pandas as pd
-from fpdf import FPDF
-import pdfkit
 import os
+import pdfkit
+import random
 
 def handle_nan(value, default):
     return default if pd.isna(value) else value
 
-def generate_html(data):
+def generate_opsional_list(data, page_number, katakunci_list):
+    opsional_html = ""
+    for i in range(1, 10):
+        opsional_key = f'Opsional {i}'
+        if opsional_key in data and len(data[opsional_key]) > page_number - 1:
+            opsional_value = handle_nan(data[opsional_key][page_number - 1], f"Default Opsional {i}")
+            opsional_html += f"                <li class='indent justify left'>{opsional_value}</li>\n"
+
+    # Tambahkan kata kunci dari generate_katakunci.txt
+    random.shuffle(katakunci_list)
+    opsional_html += f"<li class='indent justify left'>{', '.join(katakunci_list)}</li>\n"
+
+    return opsional_html
+
+def generate_html(data, katakunci_list):
+    page_number = []
     template = f"""
     <!DOCTYPE html>
     <html>
@@ -33,31 +48,29 @@ def generate_html(data):
                 text-align: justify;
             }}
             .left {{
-                text-align: left;  /* Ubah ke left agar teks opsional di rata kiri */
-            }}
-            .center {{
-                text-align: center;
+                text-align: left;
             }}
         </style>
     </head>
     <body>
         <div class="container">
-            <h1 class="bold center">{handle_nan(data['Bab'][0], "Default Bab")}</h1>
-            <p class="indent justify">
-                {handle_nan(data['Subjudul 1'][0], "Default Subjudul")}
-            </p class="left"> <!-- Ubah ke left agar opsional di rata kiri -->
-            <ol>
     """
+    for i, bab_key in enumerate(data['Bab']):
+        subjudul_key = f'Subjudul {i+1}'
+        Halaman_key = f'Halaman'
 
-    # Generate list items for opsional data
-    for i in range(1, 16):  # Assuming opsional data is up to 15
-        opsional_key = f'Opsional {i}'
-        if opsional_key in data:
-            opsional_value = handle_nan(data[opsional_key][0], f"Default Opsional {i}")
-            template += f"                <li class='indent justify left'>{opsional_value}</li>\n"
-
+        template += f"""
+            <!-- Page {i+1} -->
+            <h1 class="bold left">{handle_nan(data['Bab'][i], "Default Bab")}</h1>
+            <p class="indent justify">
+                {handle_nan(data[subjudul_key][0], f"Default {subjudul_key}")}
+            </p>
+            <div class="indent justify">
+                <ul class="indent justify left">{generate_opsional_list(katakunci_list, page_number, keyword_list)}</ul>
+                <p class="indent justify left">{handle_nan(data[Halaman_key][0], "Default Halaman")}</p>
+            </div>
+        """
     template += """
-            </ol>
         </div>
     </body>
     </html>
@@ -65,29 +78,34 @@ def generate_html(data):
     return template
 
 def generate_pdf_from_html(html_content, output_pdf):
-    with open('isi.html', 'w', encoding='utf-8') as html_file:
+    with open('materi.html', 'w', encoding='utf-8') as html_file:
         html_file.write(html_content)
 
-    # Konversi HTML ke PDF menggunakan modul pdfkit
-    pdfkit.from_file('isi.html', output_pdf)
+    # Convert HTML to PDF using pdfkit
+    pdfkit.from_file('materi.html', output_pdf)
 
-    # Hapus file HTML sementara
-    os.remove('isi.html')
+    # Remove temporary HTML file
+    os.remove('materi.html')
 
     print(f"Dokumen PDF berhasil disimpan di {output_pdf}")
 
 if __name__ == "__main__":
-    # Contoh data, gantilah dengan cara sesuai kebutuhan
-    data = {
-        'Logo': ['Logo Perusahaan'],
-        'Bab': ['Bab I Pendahuluan'],
-        'Subjudul 1': ['Latar Belakang'],
-        'Opsional 1': ['Opsional 1'],
-        'Opsional 2': ['Opsional 2'],
-        # ... tambahkan opsional lainnya sesuai kebutuhan
-    }
+    # Read data from Excel file
+    excel_file = 'data.xlsx'
+    if os.path.exists(excel_file):
+        data = pd.read_excel(excel_file).to_dict(orient='list')
+    else:
+        print(f"File '{excel_file}' not found.")
+        data = {}
 
-    html_content = generate_html(data)
-    output_pdf = "output.pdf"
+    # Read keywords from generate_katakunci.txt
+    with open('katakunci.csv', 'r', encoding='utf-8') as katakunci_file:
+        katakunci_list = katakunci_file.read().strip().split(',')
+        
+    with open('katakunci.txt', 'r', encoding='utf-8') as katakunci_file:
+        keyword_list = katakunci_file.read().strip().split(',')
     
+    html_content = generate_html(data, katakunci_list)
+    output_pdf = "materi.pdf"
+
     generate_pdf_from_html(html_content, output_pdf)
