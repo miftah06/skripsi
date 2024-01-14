@@ -25,6 +25,15 @@ https://products.fileformat.app/word-processing/merger/html#:~:text=How%20to%20m
 
 https://www.wordize.com/merge/html/
 
+NEWLINE REMOVER:
+
+https://www.textfixer.com/tools/remove-line-breaks.php
+
+
+##  HTML2WORD
+
+https://convertio.co/html-doc/
+
 
 ### PDF TO WORD
 https://smallpdf.com/pdf-to-word
