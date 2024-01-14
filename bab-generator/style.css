@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 4%;
+}
+
+.container {
+    margin: auto;
+    width: 80%;
+    text-align: left;
+}
+
+h1 {
+    font-weight: bold;
+}
+
+h2 {
+    font-weight: bold;
+}
+
+p {
+    margin-bottom: 0.2em;
+}
