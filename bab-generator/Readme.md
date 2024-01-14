@@ -1,6 +1,73 @@
 ```markdown
 # Bab Generator
+Berikut adalah struktur dasar `Readme.md` yang dapat Anda tambahkan ke repositori GitHub Anda:
 
+```markdown
+# Bab Generator for Skripsi
+
+This project provides a set of scripts for generating chapters (Bab) and converting them into HTML and PDF formats. The project includes various scripts that cater to different needs of generating content, beautifying the output, and merging files.
+
+## Contents
+
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [Scripts](#scripts)
+4. [Dependencies](#dependencies)
+5. [Contributing](#contributing)
+6. [License](#license)
+
+## Installation
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/miftah06/skripsi.git
+cd skripsi/bab-generator
+```
+
+Make sure you have the required dependencies installed.
+
+## Usage
+
+Navigate to the `bab-generator` directory:
+
+```bash
+cd bab-generator
+```
+
+Run the desired scripts according to your needs.
+
+```bash
+# Example: Run generate.py
+python generate.py
+```
+
+## Scripts
+
+- **generate.py**: Generate HTML and PDF content based on user input.
+- **pdf-generator.py**: Generate PDF from HTML using pdfkit.
+- **nulis-pdf.py**: Script for creating PDF using FPDF library.
+- **nulis-materi.py**: Create HTML content for the 'materi' based on user input.
+- **input-materi.py**: Input script for 'materi' generation.
+- **nulis.py**: Manually input HTML merging script.
+- **Readme.md**: Documentation file.
+
+## Dependencies
+
+- Python 3.x
+- Additional Python libraries specified in requirements.txt
+
+Install dependencies using:
+
+```bash
+pip install -r requirements.txt
+```
+
+develop by me
+
+```
+
+Pastikan untuk memperbarui bagian [Dependencies](#dependencies) sesuai dengan kebutuhan proyek Anda. Juga, sesuaikan dengan struktur skrip dan informasi yang sebenarnya di repositori Anda.
 Bab Generator adalah sebuah alat otomatis untuk menghasilkan dokumen skripsi atau tulisan ilmiah dengan format bab seperti pendahuluan, pembahasan, dan tinjauan pustaka. Alat ini menggunakan beberapa modul Python untuk menghasilkan output dalam bentuk PDF dan HTML.
 
 Berikut adalah contoh Readme.md yang diubah dengan modifikasi terkait penggunaan `weasyprint` dan penggantian beberapa modul:
