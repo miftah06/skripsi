@@ -42,18 +42,6 @@ def bootstrap():
         'Opsional 1': [],
         'Opsional 2': [],
         'Opsional 3': [],
-        'Opsional 4': [],
-        'Opsional 5': [],
-        'Opsional 6': [],
-        'Opsional 7': [],
-        'Opsional 8': [],
-        'Opsional 9': [],
-        'Opsional 10': [],
-        'Opsional 11': [],
-        'Opsional 12': [],
-        'Opsional 13': [],
-        'Opsional 14': [],
-        'Opsional 15': [],
     }
 
     i = 1
@@ -69,7 +57,7 @@ def bootstrap():
         data_dict['Bab'].append(bab)
         data_dict['Logo'].append(halaman)
 
-        for j in range(15):
+        for j in range(3):
             data_dict[f'Opsional {j + 1}'].append(opsional[j])
 
         data_dict[f'Subjudul {i}'] = subjudul_sections

@@ -8,6 +8,72 @@ This project consists of two scripts: `bab-generator` and `cover-generator`, des
 ## bab-generator
 
 The `bab-generator` script is used for generating chapters and content for your thesis document. It takes user input for various sections, subheadings, and optional content and generates an HTML file that can be further converted into a PDF document.
+# Bab Generator
+
+## Introduction
+This tool is a simple Python script to generate chapters (Bab) for academic purposes, such as thesis or research papers. It prompts the user for input including the chapter title, optional content for the page, and subheadings with their respective optional content. The generated output includes an HTML file and a PDF file.
+
+## Getting Started
+
+1. **Run Input Script:**
+    ```bash
+    python input.py
+    ```
+atau untuk materi   
+   ```bash
+    python input-materi.py
+    ```
+	
+nulis materinya
+    ```bash
+    python nulis-materi.py
+    ```
+
+untuk nulis khusus automatis	
+    ```bash
+    python pdf-generator.py
+    ```
+	
+lalu jalankan
+    ```bash
+    python pdf.py
+    ```
+
+    - Enter the chapter title (BAB), e.g., "BAB II PEMBAHASAN."
+    - Provide optional content for the page.
+    - Input information for each of the three optional sections.
+
+2. **Run Generator Script:**
+    ```bash
+    python generator.py
+    ```
+    - This will generate an HTML file (`materi.html`) and attempt to create a PDF file (`materi_{{timestamp}}_page1.pdf`) using the ReportLab library. If the PDF creation fails, you will receive a message indicating the issue.
+
+    ```bash
+    Proses selesai. File HTML yang indah tersedia di materi.html.
+    File materi_{{timestamp}}_page1.pdf tidak ditemukan. Pastikan file PDF dari ReportLab sudah terbuat.
+    ```
+
+3. **Run Generate Script:**
+    ```bash
+    python generate.py
+    ```
+    - This will generate an HTML file (`isi.html`) and a PDF file (`final_output.pdf`) using the provided input.
+
+    ```bash
+    Proses selesai. File HTML yang indah tersedia di isi.html.
+    Proses selesai. File PDF yang indah tersedia di final_output.pdf.
+    ```
+
+## Requirements
+- Python 3.x
+- pandas
+- xlsxwriter
+- fpdf
+- reportlab
+
+## Troubleshooting
+- If you encounter any issues with the PDF generation, make sure the necessary libraries (`fpdf` and `reportlab`) are installed.
 
 ### Prerequisites
 

@@ -68,13 +68,13 @@ def generate_html(data, katakunci_list):
     """
     for i, bab_key in enumerate(data['Bab']):
         subjudul_key = f'Subjudul {i+1}'
-        Halaman_key = f'Halaman'
+        Halaman_key = f'Logo'
 
         template += f"""
             <!-- Page {i+1} -->
-            <h1 class="bold left">{handle_nan(data['Bab'][i], "Default Bab")}</h1>
+            <h1 class="bold left">{handle_nan(data['Bab'][i], "Judul Artikel")}</h1>
             <p class="indent justify">
-                {handle_nan(data[subjudul_key][0], f"Default {subjudul_key}")}
+                {handle_nan(data[subjudul_key][0], f"Part {subjudul_key}: ")}
             </p>
             <div class="indent justify">
                 <ul class="indent justify left">{generate_opsional_list(katakunci_list, page_number, keyword_list)}</ul>
