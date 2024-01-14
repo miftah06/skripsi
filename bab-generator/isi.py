@@ -1,76 +1,162 @@
 import os
-import chardet
+import pandas as pd
 from fpdf import FPDF
-from bs4 import BeautifulSoup
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.probability import FreqDist
-from nltk.tokenize import RegexpTokenizer
+from datetime import datetime
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from PyPDF2 import PdfWriter, PdfReader
 
-def detect_encoding(file_path):
-    with open(file_path, 'rb') as file:
-        result = chardet.detect(file.read())
-    return result['encoding']
+def handle_nan(value, default_value=""):
+    """Handles NaN values by replacing them with a default value."""
+    return default_value if pd.isna(value) else value
 
-def read_text_file(file_path, encoding='utf-8'):
-    with open(file_path, 'r', encoding=encoding) as file:
-        content = file.read()
-    return content
-
-def preprocess_text(content):
-    # Use nltk to process text, such as tokenization, removing stop words, and counting word frequencies
-    nltk.download('punkt')
-    nltk.download('stopwords')
+def generate_html(data):
+    halaman = handle_nan(data['Opsional 1'][0], "Default Halaman")
     
-    # Tokenization
-    tokens = word_tokenize(content)
-
-    # Remove stop words
-    stop_words = set(stopwords.words('indonesian'))
-    filtered_tokens = [word.lower() for word in tokens if word.isalpha() and word.lower() not in stop_words]
-
-    # Count word frequencies
-    fdist = FreqDist(filtered_tokens)
-
-    # Only take the top 100 words as an example
-    top_words = [word for word, freq in fdist.most_common(100)]
+    # Generate timestamp
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     
-    return top_words
+    template = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>{halaman} - {handle_nan(data['Bab'][0], "Default Bab")}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <style>
+            body {{
+                margin: 4%;
+                font-family: 'Times New Roman', Times, serif;
+            }}
+            .container {{
+                margin: auto;
+                width: 70%;
+                text-align: justify;
+            }}
+            .bold {{
+                font-weight: bold;
+                font-size: 16px;
+            }}
+            .indent {{
+                text-indent: 20px;
+            }}
+            .justify {{
+                text-align: justify;
+            }}
+            .left {{
+                text-align: left;
+                margin-bottom: 2em;
+            }}
+            .center {{
+                text-align: center;
+            }}
+            .ul-spacing {{
+                margin-left: 1em;
+            }}
+            .first-line-indent {{
+                text-indent: 3em;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
+            <p class="indent justify bold ">
+                {handle_nan(data['Subjudul 1'][0], "Default Subjudul")}
+            </p> <!-- Remove class="left" here -->
+            <p class="indent justify ul-spacing first-line-indent">
+                {halaman}
+            </p>
+            <p class="indent justify ul-spacing first-line-indent">
+                {handle_nan(data['Logo 1'][0], "Default Keterangan")}
+            </p>
+            <ol>
+        <div class="container">
+            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
+            <p class="indent justify bold ">
+                {handle_nan(data['Subjudul 2'][0], "Default Subjudul")}
+            </p> <!-- Remove class="left" here -->
+            <p class="indent justify ul-spacing first-line-indent">
+                {halaman}
+            </p>
+            <p class="indent justify ul-spacing first-line-indent">
+                {handle_nan(data['Logo 2'][0], "Default Keterangan")}
+            </p>
+            <ol>
+        <div class="container">
+            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
+            <p class="indent justify bold ">
+                {handle_nan(data['Subjudul 3'][0], "Default Subjudul")}
+            </p> <!-- Remove class="left" here -->
+            <p class="indent justify ul-spacing first-line-indent">
+                {halaman}
+            </p>
+            <p class="indent justify ul-spacing first-line-indent">
+                {handle_nan(data['Logo 3'][0], "Default Keterangan")}
+            </p>
+            <ol>
+    """
 
-def create_html_from_content(content):
-    # Use BeautifulSoup to generate HTML from text
-    soup = BeautifulSoup(content, 'html.parser')
-    html_content = soup.prettify()
-    return html_content
+    # Generate list items for optional data
+    for i in range(1, 16):  # Assuming optional data is up to 15
+        optional_key = f'Opsional {i}'
+        if optional_key in data and not pd.isna(data[optional_key][0]):
+            optional_value = handle_nan(data[optional_key][0], f"")
+            template += f"                <li class='indent justify left'>{optional_value}</li>\n"
 
-def create_pdf_from_html(html_content, output_file):
-    # Use FPDF to print HTML to PDF
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    template += """
+            </ol>
+        </div>
+    </body>
+    </html>
+    """
 
-    # Add HTML content to PDF
-    pdf.write_html(html_content)
+    # Save HTML
+    output_html_path = f'materi_{timestamp}.html'
+    with open(output_html_path, 'w', encoding='utf-8') as html_file:
+        html_file.write(template)
 
-    # Save PDF
-    pdf.output(output_file)
+    print("\nProses selesai. File HTML yang indah tersedia di materi.html.")
+    return output_html_path
+
+def beauty_pdf(data, output_html_path):
+    pdf_output_path = "final_output.pdf"
+
+    # Convert HTML to PDF using ReportLab
+    c = canvas.Canvas(pdf_output_path, pagesize=letter)
+    with open(output_html_path, 'r', encoding='utf-8') as html_file:
+        for line in html_file:
+            c.drawString(100, 800, line.strip())
+            c.showPage()
+    c.save()
+
+    # Check if the PDF file from ReportLab is created
+    pdf_from_reportlab_path = output_html_path.replace('.html', '_page1.pdf')
+    if os.path.exists(pdf_from_reportlab_path):
+        # Merge PDFs using PyPDF2
+        pdf_writer = PdfWriter()
+        pdf_reader = PdfReader(pdf_output_path)
+        pdf_writer.add_page(pdf_reader.pages[0])
+        
+        pdf_reader = PdfReader(pdf_from_reportlab_path)
+        pdf_writer.add_page(pdf_reader.pages[0])
+        
+        with open(pdf_output_path, 'wb') as pdf_out:
+            pdf_writer.write(pdf_out)
+
+        print("\nProses selesai. File PDF yang indah tersedia di final_output.pdf.")
+    else:
+        print(f"File {pdf_from_reportlab_path} tidak ditemukan. Pastikan file PDF dari ReportLab sudah terbuat.")
 
 def main():
-    input_file_path = "input_data.xlsx"
-    output_pdf_path = "isi.pdf"
+    # Baca data dari file Excel
+    input_file_path = 'input_data.xlsx'
+    data = pd.read_excel(input_file_path).to_dict(orient='list')
 
-    # Read content from text file
-    text_content = read_text_file(input_file_path)
+    # Panggil fungsi untuk membuat HTML
+    output_html_path = generate_html(data)
 
-    # Process text (e.g., tokenization, removing stop words, etc.)
-    preprocessed_content = preprocess_text(text_content)
-
-    # Create HTML from content
-    html_content = create_html_from_content(preprocessed_content)
-
-    # Create PDF from HTML
-    create_pdf_from_html(html_content, output_pdf_path)
+    # Panggil fungsi untuk membuat PDF
+    beauty_pdf(data, output_html_path)
 
 if __name__ == "__main__":
     main()

@@ -33,12 +33,16 @@ def split_title_into_sections(judul):
 def bootstrap():
     # Meminta input dari pengguna
     bab = input("Masukkan BAB misal' BAB II PEMBAHASAN: ").strip()
-    halaman = input("Masukkan opsional satu baris full isi halaman: ").strip()
+    halaman1 = input("Masukkan opsional satu baris full isi u/Subjudul 1: ").strip()
+    halaman2 = input("Masukkan opsional satu baris full isi u/Subjudul 2: ").strip()
+    halaman3 = input("Masukkan opsional satu baris full isi u/Subjudul 3: ").strip()
 
     # Membuat DataFrame kosong
     data_dict = {
         'Bab': [],
-        'Logo': [],
+        'Logo 1': [],
+        'Logo 2': [],
+        'Logo 3': [],
         'Opsional 1': [],
         'Opsional 2': [],
         'Opsional 3': [],
@@ -55,7 +59,9 @@ def bootstrap():
 
         # Menambahkan data ke dalam DataFrame
         data_dict['Bab'].append(bab)
-        data_dict['Logo'].append(halaman)
+        data_dict['Logo 1'].append(halaman1)
+        data_dict['Logo 2'].append(halaman2)
+        data_dict['Logo 3'].append(halaman3)
 
         for j in range(3):
             data_dict[f'Opsional {j + 1}'].append(opsional[j])
@@ -68,6 +74,11 @@ def bootstrap():
         lanjut = input("Apakah ingin menambahkan subjudul lagi? (y/n): ").strip().lower()
         if lanjut != 'y':
             break
+
+    # Ensure all lists have the same length
+    max_len = max(len(value) for value in data_dict.values())
+    for key, value in data_dict.items():
+        data_dict[key] += [''] * (max_len - len(value))
 
     # Membuat DataFrame dari input
     df = pd.DataFrame(data_dict)

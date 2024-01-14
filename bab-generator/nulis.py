@@ -1,60 +1,44 @@
 import os
-from fpdf import FPDF
 from PyPDF2 import PdfMerger
-import markdown2
 
-def html_to_pdf_wkhtmltopdf(input_html, output_pdf):
-    cmd = f'wkhtmltopdf {input_html} {output_pdf}'
-    os.system(cmd)
+def merge_html_to_pdf(html_files, output_pdf):
+    merger = PdfMerger()
+
+    for html_file in html_files:
+        pdf_file = f"{os.path.splitext(html_file)[0]}.pdf"
+        cmd = f'wkhtmltopdf {html_file} {pdf_file}'
+        os.system(cmd)
+        merger.append(pdf_file)
+
+    merger.write(output_pdf)
+    merger.close()
+
+    for html_file in html_files:
+        pdf_file = f"{os.path.splitext(html_file)[0]}.pdf"
+        os.remove(pdf_file)
+
     print(f"\nProses selesai. File PDF yang indah tersedia di {output_pdf}.")
 
-def md_to_pdf(input_md, output_pdf):
-    with open(input_md, 'r', encoding='utf-8') as md_file:
-        md_content = md_file.read()
-
-    html_content = markdown2.markdown(md_content)
-
-    with open('temp.html', 'w', encoding='utf-8') as html_file:
-        html_file.write(html_content)
-
-    html_to_pdf_wkhtmltopdf('temp.html', output_pdf)
-    os.remove('temp.html')
-
-def beauty_pdf(data):
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-
-    for key, values in data.items():
-        if key.startswith("Subjudul"):
-            pdf.set_font("Arial", size=12)
-            pdf.cell(0, 10, str(values[0]), ln=True, align='C')
-
-            for value in values[1:]:
-                pdf.set_font("Arial", size=12)
-                pdf.multi_cell(0, 10, str(value), align='L')
-
-            pdf.ln(5)
-
-    pdf.output("isi-manual-fpdf.pdf")
-    print("\nProses selesai. File PDF yang indah tersedia di isi-manual-fpdf.pdf.")
-
 def main():
-    # Render generate.py output HTML to PDF using wkhtmltopdf
-    html_to_pdf_wkhtmltopdf('anu.html', 'isi-manual.pdf')
+    # Input HTML files to be merged
+    html_files_to_merge = []
+    while True:
+        html_file = input("Masukkan nama file HTML (tekan Kosongkan untuk mengakhiri): ")
+        if not html_file:
+            break
+        html_files_to_merge.append(html_file)
 
-    # Render generate.py output MD to HTML
-    md_to_pdf('isi-manual.md', 'isi-manual.html')
+    # Output PDF file
+    output_pdf_file = input("Masukkan nama file PDF hasil merge: ")
 
-    # Generate data untuk beauty_pdf (sesuaikan sesuai kebutuhan)
-    data = {"Subjudul1": ["Isi subjudul 1.1", "Isi subjudul 1.2"],
-            "Subjudul2": ["Isi subjudul 2.1", "Isi subjudul 2.2"]}
+    # Merge HTML to PDF using wkhtmltopdf
+    merge_html_to_pdf(html_files_to_merge, output_pdf_file)
 
-    # Generate PDF using fpdf
-    beauty_pdf(data)
+    # Log the process
+    with open("merge_log.txt", "a") as log_file:
+        log_file.write(f"{', '.join(html_files_to_merge)} merged into {output_pdf_file}\n")
 
-    print("\nProses selesai. File PDF, MD, dan HTML yang dihasilkan tersedia.")
+    print(f"\nProses selesai. File PDF hasil merge tersedia.")
 
 if __name__ == "__main__":
     main()
