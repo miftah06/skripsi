@@ -15,3 +15,6 @@ MERAPIKAN KEYWORD.TXT:
 https://miniwebtool.com/remove-spaces/
 https://texthandler.com/text-tools/remove-double-spaces/
 
+HTML 2 PDF:
+
+https://html2pdf.com/
