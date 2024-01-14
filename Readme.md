@@ -67,14 +67,28 @@ Make sure you have the required dependencies installed:
 
 You can install these dependencies using:
 
+
+-- Contoh install
+
 ```bash
-pip install pandas fpdf
+pip install pandas
+```
+
+atau 
+
+```
+pkg install python-pandas
 ```
 
 ### Usage
 
 ```bash
-python cover-generator.py
+python nulis.py
+```
+atau 
+
+```
+python pdf.py
 ```
 
 Follow the prompts to input information about your thesis cover.
