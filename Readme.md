@@ -93,6 +93,10 @@ python pdf.py
 
 Follow the prompts to input information about your thesis cover.
 
+## Tools Conver HTML KE PDF
+
+silahkan lihat di tools.txt
+
 ## Contributing
 
 Feel free to contribute by opening issues or submitting pull requests. Your feedback and contributions are highly appreciated.
