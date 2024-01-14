@@ -152,7 +152,7 @@ pkg install python-pandas
 python cover.py
 python nulis.py
 ```
-atau 
+lalu
 
 ```
 python pdf.py
