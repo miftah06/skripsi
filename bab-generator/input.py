@@ -33,12 +33,13 @@ def split_title_into_sections(judul):
 def bootstrap():
     # Meminta input dari pengguna
     bab = input("Masukkan BAB misal' BAB II PEMBAHASAN: ").strip()
-    halaman = input("Masukkan opsional satu baris full isi halaman: ").strip()
 
     # Membuat DataFrame kosong
     data_dict = {
         'Bab': [],
-        'Logo': [],
+        'Logo 1': [],
+        'Logo 2': [],
+        'Logo 3': [],
         'Opsional 1': [],
         'Opsional 2': [],
         'Opsional 3': [],
@@ -55,7 +56,9 @@ def bootstrap():
 
         # Menambahkan data ke dalam DataFrame
         data_dict['Bab'].append(bab)
-        data_dict['Logo'].append(halaman)
+        data_dict['Logo 1'].append(input("Masukkan Ket 1: ").strip())
+        data_dict['Logo 2'].append(input("Masukkan Ket 2: ").strip())
+        data_dict['Logo 3'].append(input("Masukkan Ket 3: ").strip())
 
         for j in range(3):
             data_dict[f'Opsional {j + 1}'].append(opsional[j])
@@ -68,6 +71,10 @@ def bootstrap():
         lanjut = input("Apakah ingin menambahkan subjudul lagi? (y/n): ").strip().lower()
         if lanjut != 'y':
             break
+
+    # Print lengths of arrays for debugging
+    for key, value in data_dict.items():
+        print(f"Length of {key}: {len(value)}")
 
     # Membuat DataFrame dari input
     df = pd.DataFrame(data_dict)
