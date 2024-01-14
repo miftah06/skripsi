@@ -64,9 +64,6 @@ def generate_html(data):
                 {handle_nan(data['Subjudul 1'][0], "Default Subjudul")}
             </p> <!-- Remove class="left" here -->
             <p class="indent justify ul-spacing first-line-indent">
-                {halaman}
-            </p>
-            <p class="indent justify ul-spacing first-line-indent">
                 {handle_nan(data['Logo 1'][0], "Default Keterangan")}
             </p>
             <ol>
@@ -76,9 +73,6 @@ def generate_html(data):
                 {handle_nan(data['Subjudul 2'][0], "Default Subjudul")}
             </p> <!-- Remove class="left" here -->
             <p class="indent justify ul-spacing first-line-indent">
-                {halaman}
-            </p>
-            <p class="indent justify ul-spacing first-line-indent">
                 {handle_nan(data['Logo 2'][0], "Default Keterangan")}
             </p>
             <ol>
@@ -87,9 +81,6 @@ def generate_html(data):
             <p class="indent justify bold ">
                 {handle_nan(data['Subjudul 3'][0], "Default Subjudul")}
             </p> <!-- Remove class="left" here -->
-            <p class="indent justify ul-spacing first-line-indent">
-                {halaman}
-            </p>
             <p class="indent justify ul-spacing first-line-indent">
                 {handle_nan(data['Logo 3'][0], "Default Keterangan")}
             </p>
