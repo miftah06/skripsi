@@ -149,6 +149,7 @@ pkg install python-pandas
 ### Usage
 
 ```bash
+python cover.py
 python nulis.py
 ```
 atau 
