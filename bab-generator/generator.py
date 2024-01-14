@@ -11,7 +11,7 @@ def handle_nan(value, default_value=""):
     return default_value if pd.isna(value) else value
 
 def generate_html(data):
-    halaman = handle_nan(data['Logo 1'][0], "Default Halaman")
+    halaman = handle_nan(data['Opsional 1'][0], "Default Halaman")
     
     # Generate timestamp
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -61,7 +61,21 @@ def generate_html(data):
         <div class="container">
             <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
             <p class="indent justify bold ">
-                {handle_nan(data['Subjudul 1'][0], "Default Subjudul")}
+                {handle_nan(data['Logo 1'][0], "Default Subjudul")}
+            </p class="left"> <!-- Ubah ke left agar opsional di rata kiri -->
+            <p class="indent justify ul-spacing first-line-indent">
+                {halaman}
+            </p>
+            <ol>
+            <p class="indent justify bold ">
+                {handle_nan(data['Logo 2'][0], "Default Subjudul")}
+            </p class="left"> <!-- Ubah ke left agar opsional di rata kiri -->
+            <p class="indent justify ul-spacing first-line-indent">
+                {halaman}
+            </p>
+            <ol>
+            <p class="indent justify bold ">
+                {handle_nan(data['Logo 3'][0], "Default Subjudul")}
             </p class="left"> <!-- Ubah ke left agar opsional di rata kiri -->
             <p class="indent justify ul-spacing first-line-indent">
                 {halaman}
