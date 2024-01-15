@@ -62,9 +62,9 @@ def bootstrap():
         subjudul_sections = split_title_into_sections(subjudul)
 
         # Meminta input untuk halaman
-        halaman_1 = input("Masukkan isi Logo 1: ").strip()
-        halaman_2 = input("Masukkan isi Logo 2: ").strip()
-        halaman_3 = input("Masukkan isi Logo 3: ").strip()
+        halaman_1 = input("Masukkan isi Subjudul 1: ").strip()
+        halaman_2 = input("Masukkan isi Subjudul 2: ").strip()
+        halaman_3 = input("Masukkan isi Subjudul 3: ").strip()
 
         # Menambahkan data ke dalam DataFrame
         data_dict['Bab'].append(bab)
