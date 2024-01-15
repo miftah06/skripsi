@@ -1,153 +1,108 @@
 import os
 import pandas as pd
 from fpdf import FPDF
+import pdfkit
 from datetime import datetime
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from PyPDF2 import PdfWriter, PdfReader
 
 def handle_nan(value, default_value=""):
-    """Handles NaN values by replacing them with a default value."""
     return default_value if pd.isna(value) else value
 
 def generate_html(data):
-    halaman = handle_nan(data['Opsional 1'][0], "Default Halaman")
-    
     # Generate timestamp
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     
-    template = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>{halaman} - {handle_nan(data['Bab'][0], "Default Bab")}</title>
+    template = f"""<!DOCTYPE html><html><head><title>{handle_nan(data.iloc[0]['Bab'], "Default Bab")}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <style>
-            body {{
-                margin: 4%;
-                font-family: 'Times New Roman', Times, serif;
-            }}
-            .container {{
-                margin: auto;
-                width: 70%;
-                text-align: justify;
-            }}
-            .bold {{
-                font-weight: bold;
-                font-size: 16px;
-            }}
-            .indent {{
-                text-indent: 20px;
-            }}
-            .justify {{
-                text-align: justify;
-            }}
-            .left {{
-                text-align: left;
-                margin-bottom: 2em;
-            }}
-            .center {{
-                text-align: center;
-            }}
-            .ul-spacing {{
-                margin-left: 1em;
-            }}
-            .first-line-indent {{
-                text-indent: 3em;
-            }}
+        <style>body {{margin: 4%;font-family: 'Times New Roman', Times, serif;}}
+            .container {{margin: auto;width: 70%;text-align: justify;}}
+            .bold {{font-weight: bold;font-size: 16px;}}
+            .indent {{text-indent: 20px;}}
+            .justify {{text-align: justify;}}
+            .left {{text-align: left;margin-bottom: 2em;}}
+            .center {{text-align: center;}}
+            .ul-spacing {{margin-left: 1em;}}
+            .first-line-indent {{text-indent: 3em;}}
         </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
-            <p class="indent justify bold ">
-                {handle_nan(data['Subjudul 1'][0], "Default Subjudul")}
-            </p> <!-- Remove class="left" here -->
-            <p class="indent justify ul-spacing first-line-indent">
-                {handle_nan(data['Logo 1'][0], "Default Keterangan")}
-            </p>
-            <ol>
-        <div class="container">
-            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
-            <p class="indent justify bold ">
-                {handle_nan(data['Subjudul 2'][0], "Default Subjudul")}
-            </p> <!-- Remove class="left" here -->
-            <p class="indent justify ul-spacing first-line-indent">
-                {handle_nan(data['Logo 2'][0], "Default Keterangan")}
-            </p>
-            <ol>
-        <div class="container">
-            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
-            <p class="indent justify bold ">
-                {handle_nan(data['Subjudul 3'][0], "Default Subjudul")}
-            </p> <!-- Remove class="left" here -->
-            <p class="indent justify ul-spacing first-line-indent">
-                {handle_nan(data['Logo 3'][0], "Default Keterangan")}
-            </p>
-            <ol>
-    """
+    </head><body><div class="container"><h1 class="bold center">{handle_nan(data.iloc[0]['Bab'], "")}</h1>
+        <p class="indent justify bold">"""
 
     # Generate list items for optional data
-    for i in range(1, 16):  # Assuming optional data is up to 15
-        optional_key = f'Opsional {i}'
-        if optional_key in data and not pd.isna(data[optional_key][0]):
-            optional_value = handle_nan(data[optional_key][0], f"")
-            template += f"                <li class='indent justify left'>{optional_value}</li>\n"
+    for i in range(1, 4):  # Assuming optional data is up to 3
+        optional_subjudul_key = f'Subjudul {i}'
+        optional_logo_key = f'Logo {i}'
+        optional_opsional_key = f'Opsional {i}'
 
-    template += """
-            </ol>
-        </div>
-    </body>
-    </html>
-    """
+        if optional_subjudul_key in data.columns and not pd.isna(data.iloc[0][optional_subjudul_key]):
+            optional_value = handle_nan(data.iloc[0][optional_subjudul_key], f"")
+            template += f"<li class='indent justify left'>{optional_value}</li>"
 
+        if optional_logo_key in data.columns and not pd.isna(data.iloc[0][optional_logo_key]):
+            optional_value = handle_nan(data.iloc[0][optional_logo_key], f"")
+            template += f"<li class='indent justify left'>{optional_value}</li>"
+
+        if optional_opsional_key in data.columns and not pd.isna(data.iloc[0][optional_opsional_key]):
+            optional_value = handle_nan(data.iloc[0][optional_opsional_key], f"")
+            template += f"<li class='indent justify left'>{optional_value}</li>"
+
+    template += """</p><div class="left ul-spacing"><ul class="first-line-indent">"""
+    
     # Save HTML
-    output_html_path = f'materi_{timestamp}.html'
+    output_html_path = f'isi_{timestamp}.html'
     with open(output_html_path, 'w', encoding='utf-8') as html_file:
         html_file.write(template)
+    
+    print("\nProses selesai. File HTML yang indah tersedia di isi.html.")
+    return template
 
-    print("\nProses selesai. File HTML yang indah tersedia di materi.html.")
-    return output_html_path
+def generate_pdf_from_html(html_content, output_pdf):
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    file_name, file_extension = os.path.splitext(output_pdf)
+    stamped_output_pdf = f"{file_name}_{timestamp}{file_extension}"
 
-def beauty_pdf(data, output_html_path):
-    pdf_output_path = "final_output.pdf"
+    with open('isi.html', 'w', encoding='utf-8') as html_file:
+        html_file.write(html_content)
 
-    # Convert HTML to PDF using ReportLab
-    c = canvas.Canvas(pdf_output_path, pagesize=letter)
-    with open(output_html_path, 'r', encoding='utf-8') as html_file:
-        for line in html_file:
-            c.drawString(100, 800, line.strip())
-            c.showPage()
-    c.save()
+    pdfkit.from_file('isi.html', stamped_output_pdf)
+    os.remove('isi.html')
 
-    # Check if the PDF file from ReportLab is created
-    pdf_from_reportlab_path = output_html_path.replace('.html', '_page1.pdf')
-    if os.path.exists(pdf_from_reportlab_path):
-        # Merge PDFs using PyPDF2
-        pdf_writer = PdfWriter()
-        pdf_reader = PdfReader(pdf_output_path)
-        pdf_writer.add_page(pdf_reader.pages[0])
-        
-        pdf_reader = PdfReader(pdf_from_reportlab_path)
-        pdf_writer.add_page(pdf_reader.pages[0])
-        
-        with open(pdf_output_path, 'wb') as pdf_out:
-            pdf_writer.write(pdf_out)
+    print(f"Dokumen PDF berhasil disimpan di {stamped_output_pdf}")
 
-        print("\nProses selesai. File PDF yang indah tersedia di final_output.pdf.")
-    else:
-        print(f"File {pdf_from_reportlab_path} tidak ditemukan. Pastikan file PDF dari ReportLab sudah terbuat.")
+def beauty_pdf(data):
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    bold_style = 'B'
+    newline_style = 'Ln'
+    
+    for key, values in data.items():
+        if key.startswith("Subjudul"):
+            pdf.set_font("Arial", size=12)
+            pdf.cell(0, 10, str(values[0]), ln=True, align='C')
+            
+            for value in values[1:]:
+                pdf.set_font("Arial", size=12)
+                pdf.multi_cell(0, 10, str(value), align='L')
+                
+            pdf.ln(5)
+
+    pdf.output("final_output.pdf")
+    print("\nProses selesai. File PDF yang indah tersedia di final_output.pdf.")
 
 def main():
     # Baca data dari file Excel
     input_file_path = 'input_data.xlsx'
-    data = pd.read_excel(input_file_path).to_dict(orient='list')
+    data = pd.read_excel(input_file_path)
 
     # Panggil fungsi untuk membuat HTML
-    output_html_path = generate_html(data)
+    html_content = generate_html(data)
+
+    with open(f'output.html', 'w', encoding='utf-8') as html_file:
+        html_file.write(html_content)
 
     # Panggil fungsi untuk membuat PDF
-    beauty_pdf(data, output_html_path)
+    beauty_pdf(data)
 
 if __name__ == "__main__":
     main()

@@ -68,10 +68,10 @@ def generate_html(data):
     """
 
     # Save HTML
-    output_html_path = f'isi_{timestamp}.html'
+    output_html_path = f'materi_{timestamp}.html'
     with open(output_html_path, 'w', encoding='utf-8') as html_file:
         html_file.write(template)    
-    print("\nProses selesai. File HTML yang indah tersedia di isi.html.")
+    print("\nProses selesai. File HTML yang indah tersedia di materi.html.")
     return template
 
 def generate_pdf_from_html(html_content, output_pdf):
@@ -79,11 +79,11 @@ def generate_pdf_from_html(html_content, output_pdf):
     file_name, file_extension = os.path.splitext(output_pdf)
     stamped_output_pdf = f"{file_name}_{timestamp}{file_extension}"
 
-    with open('isi.html', 'w', encoding='utf-8') as html_file:
+    with open('materi.html', 'w', encoding='utf-8') as html_file:
         html_file.write(html_content)
 
-    pdfkit.from_file('isi.html', stamped_output_pdf)
-    os.remove('isi.html')
+    pdfkit.from_file('materi.html', stamped_output_pdf)
+    os.remove('materi.html')
 
     print(f"Dokumen PDF berhasil disimpan di {stamped_output_pdf}")        
 

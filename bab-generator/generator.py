@@ -55,9 +55,9 @@ def generate_html(data):
     </head>
     <body>
         <div class="container">
-            <h1 class="bold center">{handle_nan(data['Bab'][0], "Default Bab")}</h1>
+            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
             <p class="indent justify bold">
-                {handle_nan(data['Subjudul 1'][0], "Default Subjudul")}
+                {handle_nan(data['Subjudul 1'][0], "")}
             </p>
             <div class="left ul-spacing">
                 <ul class="first-line-indent">
