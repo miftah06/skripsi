@@ -31,7 +31,7 @@ def validate_Subjudul(Subjudul, i):
 def validate_Opsional(Opsional, i):
     while not Opsional:
         print(f"Opsional {i} tidak boleh kosong.")
-        Opsional = input(f"Masukkan Opsional {i} misal' 1. Apa yang dixxx...? 1 : ").strip()
+        Opsional = input(f"Masukkan Isi Subjudul {i} misal' 1. Apa yang dixxx...? 1 : ").strip()
     return Opsional
 
 def split_title_into_sections(judul):
@@ -74,7 +74,7 @@ def bootstrap():
         # Menambahkan data ke dalam DataFrame
         data_dict['Bab'].append(bab)
         for j in range(1, num_logos + 1):
-            logo_input = input(f"Masukkan Keterangan Baris {i} untuk Subjudul ke {j}: ").strip()
+            logo_input = input(f"Masukkan Keterangan Baris {i} \n untuk Subjudul mulai dari yang ke 2 \n yang ke 1 sebagai Keterangan BAB  {j}: ").strip()
             data_dict[f'Logo {j}'].append(logo_input)
 
         for j in range(15):
