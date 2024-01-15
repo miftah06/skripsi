@@ -14,7 +14,7 @@ def generate_object_names(keywords_file, num_objects=1000):
     object_names = []
     for _ in range(num_objects):
         extended_name = []
-        for _ in range(10):
+        for _ in range(100):
             word = random.choice(keywords)
             if word not in extended_name:
                 extended_name.append(word)
