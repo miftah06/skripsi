@@ -48,9 +48,9 @@ def bootstrap():
         'Opsional 14': [],
         'Opsional 15': [],
         'Subjudul 1': [],
-        'halaman 1': [],
-        'halaman 2': [],
-        'halaman 3': [],
+        'Logo 1': [],
+        'Logo 2': [],
+        'Logo 3': [],
     }
 
     i = 1
@@ -62,16 +62,16 @@ def bootstrap():
         subjudul_sections = split_title_into_sections(subjudul)
 
         # Meminta input untuk halaman
-        halaman_1 = input("Masukkan isi halaman 1: ").strip()
-        halaman_2 = input("Masukkan isi halaman 2: ").strip()
-        halaman_3 = input("Masukkan isi halaman 3: ").strip()
+        halaman_1 = input("Masukkan isi Logo 1: ").strip()
+        halaman_2 = input("Masukkan isi Logo 2: ").strip()
+        halaman_3 = input("Masukkan isi Logo 3: ").strip()
 
         # Menambahkan data ke dalam DataFrame
         data_dict['Bab'].append(bab)
         data_dict['Logo'].append(halaman_1)  # Gunakan halaman_1 sebagai representasi untuk Logo
-        data_dict['halaman 1'].append(halaman_1)
-        data_dict['halaman 2'].append(halaman_2)
-        data_dict['halaman 3'].append(halaman_3)
+        data_dict['Logo 1'].append(halaman_1)
+        data_dict['Logo 2'].append(halaman_2)
+        data_dict['Logo 3'].append(halaman_3)
 
         for j in range(15):
             data_dict[f'Opsional {j + 1}'].append(opsional[j])
