@@ -11,11 +11,11 @@ def handle_nan(value, default_value=""):
     return default_value if pd.isna(value) else value
 
 def generate_html(data):
-    halaman = handle_nan(data['Logo'][0], "")
-
+    halaman = handle_nan(data['Opsional 1'][0], "Default Halaman")
+    
     # Generate timestamp
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-
+    
     template = f"""
     <!DOCTYPE html>
     <html>
@@ -62,16 +62,29 @@ def generate_html(data):
             <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
             <p class="indent justify bold ">
                 {handle_nan(data['Subjudul 1'][0], "Default Subjudul")}
-            </p class="left"> <!-- Ubah ke left agar opsional di rata kiri -->
+            </p> <!-- Remove class="left" here -->
             <p class="indent justify ul-spacing first-line-indent">
-                {halaman}
+                {handle_nan(data['Logo 1'][0], "Default Keterangan")}
             </p>
-            <p class="indent justify left">
-                {', '.join([handle_nan(data[f'Opsional {i}'][0], "") for i in range(1, 16) if data[f'Opsional {i}'][0] != 0])}
+            <ol>
+        <div class="container">
+            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
+            <p class="indent justify bold ">
+                {handle_nan(data['Subjudul 2'][0], "Default Subjudul")}
+            </p> <!-- Remove class="left" here -->
+            <p class="indent justify ul-spacing first-line-indent">
+                {handle_nan(data['Logo 2'][0], "Default Keterangan")}
             </p>
-        </div>
-    </body>
-    </html>
+            <ol>
+        <div class="container">
+            <h1 class="bold center">{handle_nan(data['Bab'][0], "")}</h1>
+            <p class="indent justify bold ">
+                {handle_nan(data['Subjudul 3'][0], "Default Subjudul")}
+            </p> <!-- Remove class="left" here -->
+            <p class="indent justify ul-spacing first-line-indent">
+                {handle_nan(data['Logo 3'][0], "Default Keterangan")}
+            </p>
+            <ol>
     """
 
     # Generate list items for optional data
@@ -93,15 +106,13 @@ def generate_html(data):
     with open(output_html_path, 'w', encoding='utf-8') as html_file:
         html_file.write(template)
 
-    print(f"\nProses selesai. File HTML yang indah tersedia di {output_html_path}.")
+    print("\nProses selesai. File HTML yang indah tersedia di materi.html.")
     return output_html_path
 
 def beauty_pdf(data, output_html_path):
-    # Generate timestamp
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    pdf_output_path = "final_output.pdf"
 
     # Convert HTML to PDF using ReportLab
-    pdf_output_path = f'final_output_{timestamp}.pdf'
     c = canvas.Canvas(pdf_output_path, pagesize=letter)
     with open(output_html_path, 'r', encoding='utf-8') as html_file:
         for line in html_file:
@@ -123,28 +134,19 @@ def beauty_pdf(data, output_html_path):
         with open(pdf_output_path, 'wb') as pdf_out:
             pdf_writer.write(pdf_out)
 
-        print(f"\nProses selesai. File PDF yang indah tersedia di {pdf_output_path}.")
+        print("\nProses selesai. File PDF yang indah tersedia di final_output.pdf.")
     else:
         print(f"File {pdf_from_reportlab_path} tidak ditemukan. Pastikan file PDF dari ReportLab sudah terbuat.")
 
 def main():
-    # Meminta pengguna memasukkan nama file Excel
-    input_file_path = input("Masukkan nama file Excel (misalnya, input_data.xlsx): ")
+    # Baca data dari file Excel
+    input_file_path = 'input_data.xlsx'
+    data = pd.read_excel(input_file_path).to_dict(orient='list')
 
-    # Check if the input file exists
-    if not os.path.exists(input_file_path):
-        print(f"File {input_file_path} tidak ditemukan. Pastikan file Excel sudah tersedia.")
-        return
-
-    # Read data from Excel
-    try:
-        data = pd.read_excel(input_file_path).to_dict(orient='list')
-    except Exception as e:
-        print(f"Terjadi kesalahan saat membaca file Excel: {str(e)}")
-        return
-
-    # Call functions to generate HTML and PDF
+    # Panggil fungsi untuk membuat HTML
     output_html_path = generate_html(data)
+
+    # Panggil fungsi untuk membuat PDF
     beauty_pdf(data, output_html_path)
 
 if __name__ == "__main__":
