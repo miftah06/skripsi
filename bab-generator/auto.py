@@ -95,7 +95,7 @@ def bootstrap():
     df = pd.DataFrame(data_dict)
 
     # Menyimpan DataFrame ke file Excel
-    with pd.ExcelWriter('data.xlsx', engine='xlsxwriter') as writer:
+    with pd.ExcelWriter('auto.xlsx', engine='xlsxwriter') as writer:
         df.to_excel(writer, index=False, sheet_name='Sheet1')
 
 if __name__ == "__main__":
