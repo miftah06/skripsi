@@ -8,7 +8,7 @@ def handle_nan(value, default_value=""):
     return default_value if pd.isna(value) else value
     
 def generate_html(data):
-    halaman = handle_nan(data['Logo 1'][0], "Default Halaman")
+    halaman = handle_nan(data['Logo 1'][0], "")
     
     # Generate timestamp
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -16,7 +16,7 @@ def generate_html(data):
     <!DOCTYPE html>
     <html>
     <head>
-        <title>{halaman} - {handle_nan(data['Bab'][0], "Default Bab")}</title>
+        <title>{halaman} - {handle_nan(data['Bab'][0], "")}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <style>
             body {{
