@@ -29,7 +29,7 @@ def bootstrap():
     data_dict = {'Bab': [bab]}
 
     for j in range(15):
-        logo_input = input(f"Masukkan Keterangan Baris 1 untuk Logo ke {j+1}: ").strip()
+        logo_input = input(f"Masukkan Keterangan Baris 1 untuk Subjudul ke {j+1}: ").strip()
         data_dict[f'Logo {j + 1}'] = [logo_input]  # Set up Logo columns
 
         # Menerima input untuk setiap opsional
