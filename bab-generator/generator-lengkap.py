@@ -27,17 +27,17 @@ def generate_html(data):
         <p class="indent justify bold">"""
 
     # Generate list items for optional data
-    for i in range(1, 4):  # Assuming optional data is up to 3
+    for i in range(1, 16):  # Assuming optional data is up to 15
         optional_subjudul_key = f'Subjudul {i}'
         optional_logo_key = f'Logo {i}'
         optional_opsional_key = f'Opsional {i}'
 
-        if optional_subjudul_key in data.columns and not pd.isna(data.iloc[0][optional_subjudul_key]):
-            optional_value = handle_nan(data.iloc[0][optional_subjudul_key], f"")
-            template += f"<li class='indent justify left'>{optional_value}</li>"
-
         if optional_logo_key in data.columns and not pd.isna(data.iloc[0][optional_logo_key]):
             optional_value = handle_nan(data.iloc[0][optional_logo_key], f"")
+            template += f"<li class='indent justify left'>{optional_value}</li>"
+            
+        if optional_subjudul_key in data.columns and not pd.isna(data.iloc[0][optional_subjudul_key]):
+            optional_value = handle_nan(data.iloc[0][optional_subjudul_key], f"")
             template += f"<li class='indent justify left'>{optional_value}</li>"
 
         if optional_opsional_key in data.columns and not pd.isna(data.iloc[0][optional_opsional_key]):
