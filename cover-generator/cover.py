@@ -24,7 +24,7 @@ def validate_length(judul, skripsi):
 def bootstrap():
     # Meminta input dari pengguna
     judul, opsional, judul_karya, jenis_karyatulis = validate_length("", [[] for _ in range(4)])  # Menyesuaikan dengan perubahan dalam validate_length
-    logo = input("Masukkan logo: ").strip()
+    logo = "cover.png"
 
     oleh = input("Masukkan nama: ").strip()
     nim = input("Masukkan NIM: ").strip()

@@ -1,10 +1,12 @@
-import pandas as pd
 import os
+import pandas as pd
 import pdfkit
 import random
-
-def handle_nan(value, default):
-    return default if pd.isna(value) else value
+from fpdf import FPDF
+from datetime import datetime
+ 
+def handle_nan(value, default_value=""):
+    return default_value if pd.isna(value) else value
 
 def generate_opsional_list(data, page_number, katakunci_list):
     opsional_html = ""
@@ -13,74 +15,27 @@ def generate_opsional_list(data, page_number, katakunci_list):
         if opsional_key in data and len(data[opsional_key]) > page_number - 1:
             opsional_value = handle_nan(data[opsional_key][page_number - 1], f"Default Opsional {i}")
             opsional_html += f"                <li class='indent justify left'>{opsional_value}</li>\n"
-
-    # Tambahkan kata kunci dari generate_katakunci.txt
     random.shuffle(katakunci_list)
     opsional_html += f"<li class='indent justify left'>{', '.join(katakunci_list)}</li>\n"
-
     return opsional_html
-
+ 
 def generate_html(data, katakunci_list):
     page_number = []
-    template = f"""
+    template = """
     <!DOCTYPE html>
     <html>
     <head>
-        <title>{handle_nan(data['Logo'][0], "Default Logo")}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-               <style>
-            body {{
-                margin: 4%;
-                font-family: 'Times New Roman', Times, serif;
-            }}
-            .container {{
-                margin: auto;
-                width: 70%;
-                text-align: justify;
-            }}
-            .bold {{
-                font-weight: bold;
-                font-size: 16px;
-            }}
-            .indent {{
-                text-indent: 20px;
-            }}
-            .justify {{
-                text-align: justify;
-            }}
-            .left {{
-                text-align: left;
-                margin-bottom: 2em;
-            }}
-            .center {{
-                text-align: center;
-            }}
-            .ul-spacing {{
-                margin-left: 1em;
-            }}
-            .first-line-indent {{
-                text-indent: 3em;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
+
     """
     for i, bab_key in enumerate(data['Bab']):
         subjudul_key = f'Subjudul {i+1}'
-        Halaman_key = f'Logo'
+        Halaman_key = f'Logo {i+1}'
 
-        template += f"""
+        template += """
             <!-- Page {i+1} -->
-            <h1 class="bold left">{handle_nan(data['Bab'][i], "Judul Artikel")}</h1>
-            <p class="indent justify">
-                {handle_nan(data[subjudul_key][0], f"Part {subjudul_key}: ")}
-            </p>
-            <div class="indent justify">
-                <ul class="indent justify left">{generate_opsional_list(katakunci_list, page_number, keyword_list)}</ul>
-                <p class="indent justify left">{handle_nan(data[Halaman_key][0], "Default Halaman")}</p>
-            </div>
+ 
         """
+
     template += """
         </div>
     </body>
@@ -91,32 +46,52 @@ def generate_html(data, katakunci_list):
 def generate_pdf_from_html(html_content, output_pdf):
     with open('pdf.html', 'w', encoding='utf-8') as html_file:
         html_file.write(html_content)
-
-    # Convert HTML to PDF using pdfkit
     pdfkit.from_file('pdf.html', output_pdf)
-
-    # Remove temporary HTML file
-    os.remove('pdf.html')
-
     print(f"Dokumen PDF berhasil disimpan di {output_pdf}")
 
+def beauty_pdf(data):
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    bold_style = 'B'
+    newline_style = 'Ln'
+    
+    for key, values in data.items():
+        if key.startswith("Subjudul"):
+
+            pdf.set_font("Arial", size=12)
+            pdf.cell(0, 10, str(values[0]), ln=True, align='C')
+
+            for value in values[1:]:
+                pdf.set_font("Arial", size=12)
+                pdf.multi_cell(0, 10, str(value), align='L')
+
+            pdf.ln(5)
+
+    pdf.output("final_output.pdf")
+    print("\nProses selesai. File PDF yang indah tersedia di final_output.pdf.")
+ 
 if __name__ == "__main__":
-    # Read data from Excel file
-    excel_file = 'data.xlsx'
+    excel_file = 'auto.xlsx'
+
     if os.path.exists(excel_file):
         data = pd.read_excel(excel_file).to_dict(orient='list')
     else:
         print(f"File '{excel_file}' not found.")
         data = {}
 
-    # Read keywords from generate_katakunci.txt
+
     with open('katakunci.csv', 'r', encoding='utf-8') as katakunci_file:
         katakunci_list = katakunci_file.read().strip().split(',')
-        
+    
+
     with open('katakunci.txt', 'r', encoding='utf-8') as katakunci_file:
         keyword_list = katakunci_file.read().strip().split(',')
     
-    html_content = generate_html(data, katakunci_list)
-    output_pdf = "materi.pdf"
 
+    html_content = generate_html(data, katakunci_list)
+    output_pdf = "final_output.pdf"
     generate_pdf_from_html(html_content, output_pdf)
+
+    beauty_pdf(data)
